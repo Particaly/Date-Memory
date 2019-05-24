@@ -1,15 +1,18 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-
+import Calendar from '../components/Home/Calendar.js'
 export default class HomeScreen extends React.Component {
     render() {
         return (
-            <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                <Text onPress={() => {
-                    console.log(66666666)
-                    this.props.navigation.navigate('Details')
-                }}>Home Screen</Text>
+            <View style={styles.container}>
+                <Calendar></Calendar>
             </View>
         );
     }
 }
+
+let styles = StyleSheet.create({
+    container:{
+        flex: 1,backgroundColor:'#f5f5f5'
+    }
+})
