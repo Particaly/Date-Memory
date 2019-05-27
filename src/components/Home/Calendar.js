@@ -23,16 +23,17 @@ class Days extends React.Component{
         super(props);
         this.state = {
             today:lunar.Date()
-        }
-        markedDates[this.state.today]={selected: true, marked: true, selectedColor: 'blue'}
+        };
+        this.handleClick = this.handleClick.bind(this);
+        markedDates[this.state.today]={selected: true, marked: true, selectedColor: '#24a1ff'}
     }
-    handleClick = (day)=>{
-        console.log(day);
-        this.props.onchange(day)
+    handleClick (day){
+        this.props.onchange(day);
+
     }
     render() {
         return (
-            <Calendar markedDates={markedDates} onPressArrowRight={console.log(123546789)}></Calendar>
+            <Agenda markedDates={markedDates} onDayPress={this.handleClick}></Agenda>
         )
     }
 }
@@ -43,11 +44,17 @@ export default class Calendars extends React.Component {
         this.state = {
             todayDate: lunar.Date('yyyy, mm, dd')
         };
-        console.log(666666);
+        this.changedays = this.changedays.bind(this);
     }
     changedays(days){
+        let day = days.dateString.replace(/[-]g/,', ');
+        if(day==this.state.todayDate){
+            return
+        }else{
+            markedDates['choose']
+        }
         this.setState({
-            todayDate:days.toString()
+            todayDate:day
         })
     }
     render() {
@@ -56,7 +63,7 @@ export default class Calendars extends React.Component {
                 <View style={styles.title}>
                     <Text style={styles.title}>{this.state.todayDate}</Text>
                 </View>
-                <Days date={this.state.todayDate} onchange={(days)=>{this.changedays.bind(days)}}></Days>
+                <Days date={this.state.todayDate} onchange={this.changedays}></Days>
             </View>
         );
     }
@@ -64,7 +71,7 @@ export default class Calendars extends React.Component {
 
 let styles = StyleSheet.create({
     container:{
-        height:500,backgroundColor:'rgba(255,188,18,.2)'
+        height: 400,backgroundColor:'rgba(255,188,18,.2)'
     },
     title:{
         height: 80,textAlign: 'center',fontSize: 28,backgroundColor: '#fff',lineHeight: 80,fontFamily:'AnoStencil-Light'
