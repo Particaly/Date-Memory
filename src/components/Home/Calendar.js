@@ -14,36 +14,46 @@ LocaleConfig.locales['fr'] = {
 };
 LocaleConfig.defaultLocale = 'fr';
 
-let markedDates = {
-
-};
-let items={}
-
 export default class Calendars extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            todayDate: lunar.Date('yyyy, mm, dd')
+            todayDate: lunar.Date('yyyy, mm, dd'),
+            items:{},
+            markedDates:{}
         };
         this.changedays = this.changedays.bind(this);
     }
 
-    changedays(days){
-        let day = days.dateString.replace(/[-]g/,', ');
-        if(day==this.state.todayDate){
-            return
-        }else{
-            //markedDates['choose']
-        }
+    componentWillMount(): void {
+        fetch('https://www.kcory.com/DateMemory/getItems')
+            .then(response => {
+                return response.json();
+            }).then(data=>{
+                console.log(data);
+                for(i in data){
+                    this.setState((state)=>{
+                        items:state.items[i]=data[i]
+                    })
+                    this.setState((state)=>{
+                        markedDates:state.markedDates[i]={selected: true, endingDay: true, color: 'green', textColor: 'gray' }
+                    })
+                }
+                console.log(this);
+        }).catch(error => console.log(error));
+    }
+
+    changedays(days){//修改标题的日期
+        let day = days.dateString.replace(/-/g,', ');
         this.setState({
             todayDate:day
         })
     }
 
-    renderItem(item,firstItemInDay){
+    renderItem(item,firstItemInDay){//item就是items中的每一个对应的数组内的每一个对象
         let itemstyle = StyleSheet.create({
             container:{
-                height:50,lineHeight:50,backgroundColor:'#e02e24'
+                height: 50,lineHeight:50,backgroundColor:'#e02e24'
             }
         })
         return (
@@ -59,8 +69,8 @@ export default class Calendars extends React.Component {
                 <View style={styles.title}>
                     <Text style={styles.title}>{this.state.todayDate}</Text>
                 </View>
-                <Agenda items={items} renderItem={this.renderItem}
-                        markedDates={markedDates} onDayPress={this.changedays}></Agenda>
+                <Agenda items={this.items} renderItem={this.renderItem}
+                        markedDates={this.markedDates} onDayPress={this.changedays}></Agenda>
             </View>
         );
     }
